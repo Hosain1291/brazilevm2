@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Urna Eletrônica UE2026 - 브라질 전자투표기 & 선거 관리</title>
+  <title>Urna Eletrônica UE2026 - Justiça Eleitoral (Brasil)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=Noto+Sans+KR:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
     body {
       font-family: 'Noto Sans KR', 'Inter', sans-serif;
@@ -19,8 +20,8 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-    
-    /* 투표기 화면 동적 폰트 스케일링 변수 (기본값: 120%) */
+
+    /* 투표기 화면 120% 스케일 적용 */
     #urnaScreen {
       --screen-scale: 1.2;
       font-size: calc(1rem * var(--screen-scale));
@@ -34,7 +35,6 @@
     .scale-text-3xl { font-size: calc(1.875rem * var(--screen-scale)); }
     .scale-text-fim { font-size: calc(4.75rem * var(--screen-scale)); }
     
-    /* 실제 우르나 LCD 커서 및 텍스트 점멸 */
     @keyframes blinkCursor {
       0%, 49% { border-color: #000; }
       50%, 100% { border-color: transparent; }
@@ -51,7 +51,6 @@
       animation: blinkText 0.85s infinite;
     }
 
-    /* UE2026 실물 바디 질감 */
     .urna-body {
       background: linear-gradient(175deg, #f7f8fa 0%, #ebecee 50%, #dcdee3 100%);
       box-shadow: 
@@ -69,25 +68,6 @@
       box-shadow: inset 1px 1px 4px rgba(0,0,0,0.18);
     }
 
-    /* 상단 공식 단계 탭 네비게이션 스타일 */
-    .step-tab {
-      background: #b8bdc5;
-      color: #3e4450;
-      clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 100%, 7px 100%);
-    }
-    .step-tab.active {
-      background: #252830;
-      color: #ffffff;
-      font-weight: 700;
-    }
-
-    /* 실제 우르나 번호 박스 */
-    .urna-num-box {
-      border: 1.5px solid #202226;
-      background: rgba(255, 255, 255, 0.7);
-    }
-
-    /* 하드웨어 물리 키패드 */
     .key-num {
       background: linear-gradient(to bottom, #303338, #1a1b1e);
       box-shadow: 0 4px 0 #0d0e10, 0 5px 6px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);
@@ -98,7 +78,6 @@
       box-shadow: 0 1px 0 #0d0e10, 0 2px 3px rgba(0,0,0,0.3);
     }
 
-    /* 키보드 타건 시 시각적 반응 클래스 */
     .key-pressed {
       transform: translateY(3px) !important;
       box-shadow: 0 1px 0 #0d0e10, 0 2px 3px rgba(0,0,0,0.3) !important;
@@ -109,6 +88,7 @@
       filter: brightness(1.15);
     }
 
+    /* BRANCO (흰색 키) */
     .key-white {
       background: linear-gradient(to bottom, #ffffff, #ececec);
       box-shadow: 0 4px 0 #b3b7bd, 0 5px 6px rgba(0,0,0,0.25), inset 0 1px 1px #fff;
@@ -120,6 +100,7 @@
       box-shadow: 0 1px 0 #9ca0a6, 0 2px 3px rgba(0,0,0,0.2);
     }
 
+    /* CORRIGE (주황색 키) */
     .key-orange {
       background: linear-gradient(to bottom, #eb5e28, #cb4012);
       box-shadow: 0 4px 0 #8f2605, 0 5px 6px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.35);
@@ -131,6 +112,7 @@
       box-shadow: 0 1px 0 #6e1d04, 0 2px 3px rgba(0,0,0,0.3);
     }
 
+    /* CONFIRMA (녹색 키) */
     .key-green {
       background: linear-gradient(to bottom, #43a047, #2e7d32);
       box-shadow: 0 5px 0 #1b5e20, 0 6px 8px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.35);
@@ -142,14 +124,7 @@
       box-shadow: 0 1px 0 #124016, 0 2px 3px rgba(0,0,0,0.35);
     }
 
-    /* 드래그 앤 드롭 활성화 스타일 */
-    .dropzone-active {
-      border-color: #2563eb !important;
-      background-color: #eff6ff !important;
-      transform: scale(1.02);
-      transition: all 0.15s ease;
-    }
-
+    /* 점자 돌기 및 인그레이빙 플레이트 */
     .braille-dot {
       width: 3px;
       height: 3px;
@@ -171,30 +146,27 @@
       text-shadow: 1px 1px 1px rgba(255,255,255,0.8), -0.5px -0.5px 0.5px rgba(0,0,0,0.3);
     }
 
-    /* 커스텀 스크롤바 */
-    ::-webkit-scrollbar {
-      width: 6px;
+    .dropzone-active {
+      border-color: #2563eb !important;
+      background-color: #eff6ff !important;
+      transform: scale(1.02);
+      transition: all 0.15s ease;
     }
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #c7c7c7;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #a8a8a8;
-    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #c7c7c7; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
   </style>
 </head>
-<body class="bg-slate-200 text-slate-800 min-h-screen p-2 sm:p-6 flex flex-col items-center justify-center">
+<body class="bg-slate-200 text-slate-800 min-h-screen p-3 sm:p-6 flex flex-col items-center justify-start">
 
-  <div class="w-full max-w-6xl flex flex-col lg:flex-row items-start justify-center gap-6">
+  <div class="w-full max-w-6xl flex flex-col lg:flex-row items-start justify-center gap-6 my-auto">
 
-    <!-- 1. 브라질 전자투표기 UE2026 하드웨어 본체 -->
+    <!-- 1. 브라질 전자투표기 하드웨어 본체 (UE2026) -->
     <main class="urna-body w-full max-w-[530px] rounded-[26px] p-4 sm:p-6 border border-stone-200/90 relative flex flex-col mx-auto shrink-0 select-none shadow-2xl">
       
-      <!-- 상단 LED 및 상판 로고 디테일 -->
+      <!-- 상단 LED 및 공식 헤더 라인 -->
       <div class="flex justify-between items-center px-3 mb-2 opacity-65">
         <div class="w-1.5 h-1.5 rounded-full bg-stone-500 shadow-inner"></div>
         <div class="text-[9px] font-mono tracking-widest text-stone-600 font-bold uppercase">JUSTIÇA ELEITORAL - BRASIL</div>
@@ -205,12 +177,12 @@
       <div class="urna-screen-bezel p-3 rounded-xl flex flex-col mb-4">
         <div id="urnaScreen" class="urna-lcd w-full h-[320px] sm:h-[350px] rounded text-stone-900 flex flex-col justify-between p-2 sm:p-2.5 font-urna-screen relative overflow-hidden border border-stone-600/60 shadow-inner">
           
-          <!-- 상단 공식 선거 단계 탭 바 (실제 UE2022/UE2026 인터페이스 구현) -->
+          <!-- 상단 선거 단계 탭 바 -->
           <div class="w-full flex items-center justify-between border-b border-stone-400/60 pb-1 text-[8px] sm:text-[9.5px]">
             <div id="topTabsContainer" class="flex items-center gap-1 overflow-x-auto select-none">
-              <!-- JS 동적 탭 렌더링 -->
+              <!-- JS 동적 주입 -->
             </div>
-            <div class="text-[9px] sm:text-[10px] font-semibold text-stone-600 tracking-wider pl-1 uppercase shrink-0">
+            <div id="screenTrainingBadge" class="text-[9px] sm:text-[10px] font-semibold text-stone-600 tracking-wider pl-1 uppercase shrink-0">
               TREINAMENTO
             </div>
           </div>
@@ -220,32 +192,31 @@
             <!-- JS 동적 렌더링 -->
           </div>
 
-          <!-- 하단 공식 조작 안내 문구 (사진 속 Aperte a tecla 완벽 반영) -->
+          <!-- 하단 공식 조작 안내 문구 -->
           <div id="screenFooterPrompt" class="text-[8px] sm:text-[9px] text-stone-800 border-t border-stone-400/80 pt-1 leading-snug">
-            <div class="font-normal text-stone-800">Aperte a tecla:</div>
-            <div class="pl-2">
-              <div><strong class="font-bold text-stone-900">CONFIRMA</strong> para CONFIRMAR este voto</div>
-              <div><strong class="font-bold text-stone-900">CORRIGE</strong> para REINICIAR este voto</div>
-            </div>
+            <!-- JS 동적 렌더링 -->
           </div>
 
         </div>
       </div>
 
-      <!-- 하단: 좌측 UE2026 음각 로고 + 우측 물리 키패드 -->
+      <!-- 하단: 좌측 음각 로고 + 우측 물리 키패드 -->
       <div class="flex items-end justify-between gap-3 sm:gap-4 px-1 pt-1">
         
-        <!-- 좌측: Justiça Eleitoral 공식 음각 및 UE2026 각인 -->
-        <div class="engraved-box w-36 sm:w-44 h-28 sm:h-32 rounded-lg p-2 flex flex-col justify-between self-end mb-1">
+        <!-- 좌측: 선거법원(Justiça Eleitoral) 공식 음각 & UE2026 각인 -->
+        <div class="engraved-box w-36 sm:w-44 h-28 sm:h-32 rounded-lg p-2.5 flex flex-col justify-between self-end mb-1">
           <div class="flex items-center gap-2">
-            <svg class="w-7 h-7 sm:w-8 sm:h-8 text-stone-400 opacity-60" viewBox="0 0 100 100" fill="currentColor">
-              <circle cx="50" cy="50" r="45" stroke="#8c939d" stroke-width="8" fill="none"/>
-              <path d="M25 50 Q 50 20, 75 50 T 25 50" fill="#8c939d"/>
-              <circle cx="50" cy="50" r="14" fill="#6c737d"/>
-            </svg>
+            <!-- 공식 선거법원 저울 엠블럼 -->
+            <div class="w-8 h-8 flex items-center justify-center shrink-0">
+              <svg class="w-8 h-8 text-stone-400 opacity-60" viewBox="0 0 100 100" fill="currentColor">
+                <circle cx="50" cy="50" r="45" stroke="#8c939d" stroke-width="4" fill="none"/>
+                <path d="M50 20 L50 80 M30 35 L70 35 M22 55 L38 55 L30 35 Z M62 55 L78 55 L70 35 Z" stroke="#8c939d" stroke-width="4" fill="none"/>
+                <circle cx="50" cy="80" r="6" fill="#8c939d"/>
+              </svg>
+            </div>
             <div class="leading-none">
-              <div class="engraved-text text-[11px] sm:text-xs font-bold uppercase tracking-wider">Justiça</div>
-              <div class="engraved-text text-[11px] sm:text-xs font-bold uppercase tracking-wider">Eleitoral</div>
+              <div class="engraved-text text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Justiça</div>
+              <div class="engraved-text text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Eleitoral</div>
             </div>
           </div>
           <div class="text-center">
@@ -253,7 +224,6 @@
           </div>
         </div>
 
-        <!-- 우측: 숫자 및 3색 기능키 키패드 -->
         <div class="flex-1 flex flex-col gap-2">
           <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
             
@@ -271,7 +241,7 @@
             </button>
             
             <!-- BRANCO (흰색 키) -->
-            <button class="key-white h-10 sm:h-12 rounded font-bold text-[9px] sm:text-[10px] uppercase flex flex-col items-center justify-center leading-tight" data-action="BRANCO">
+            <button class="key-white h-10 sm:h-12 rounded font-bold text-[9px] sm:text-[10px] uppercase flex flex-col items-center justify-center leading-tight tracking-tight" data-action="BRANCO">
               <span>BRANCO</span>
               <div class="flex gap-0.5 mt-0.5">
                 <span class="braille-dot braille-dot-dark"></span>
@@ -293,7 +263,7 @@
             </button>
 
             <!-- CORRIGE (주황색 키) -->
-            <button class="key-orange h-10 sm:h-12 rounded font-bold text-[9px] sm:text-[10px] uppercase flex flex-col items-center justify-center leading-tight" data-action="CORRIGE">
+            <button class="key-orange h-10 sm:h-12 rounded font-bold text-[9px] sm:text-[10px] uppercase flex flex-col items-center justify-center leading-tight tracking-tight" data-action="CORRIGE">
               <span>CORRIGE</span>
               <div class="flex gap-0.5 mt-0.5">
                 <span class="braille-dot"></span>
@@ -303,11 +273,11 @@
 
             <button class="key-num h-10 sm:h-12 rounded text-white font-mono text-xl font-bold flex flex-col items-center justify-center" data-key="7">
               <span class="leading-none">7</span>
-              <div class="flex gap-0.5 mt-0.5"><span class="braille-dot"></span><span class="braille-dot"></span><span class="braille-dot"></span></div>
+              <div class="flex gap-0.5 mt-0.5"><span class="braille-dot"></span><span class="braille-dot"></span></div>
             </button>
             <button class="key-num h-10 sm:h-12 rounded text-white font-mono text-xl font-bold flex flex-col items-center justify-center" data-key="8">
               <span class="leading-none">8</span>
-              <div class="flex gap-0.5 mt-0.5"><span class="braille-dot"></span><span class="braille-dot"></span></div>
+              <div class="flex gap-0.5 mt-0.5"><span class="braille-dot"></span></div>
             </button>
             <button class="key-num h-10 sm:h-12 rounded text-white font-mono text-xl font-bold flex flex-col items-center justify-center" data-key="9">
               <span class="leading-none">9</span>
@@ -338,7 +308,7 @@
 
       </div>
 
-      <!-- 기기 하단 환기 슬롯 -->
+      <!-- 하단 환기 슬롯 -->
       <div class="flex justify-between items-center px-4 pt-3 opacity-30 pointer-events-none">
         <span class="w-1.5 h-1 bg-stone-700 rounded-sm"></span>
         <span class="w-1.5 h-1 bg-stone-700 rounded-sm"></span>
@@ -350,30 +320,43 @@
 
     </main>
 
-    <!-- 2. 선거 관리 패널 (사용자가 전달한 이미지 형태 1:1 완벽 구현) -->
-    <aside class="w-full max-w-[440px] bg-white rounded-2xl shadow-xl p-5 sm:p-6 border border-slate-200 flex flex-col gap-4 mx-auto">
+    <aside class="w-full max-w-[450px] bg-white rounded-2xl shadow-xl p-5 border border-slate-200 flex flex-col gap-3.5 mx-auto">
       
-      <div class="border-b border-slate-100 pb-2">
-        <h2 class="text-2xl font-black text-slate-800 tracking-tight">선거 관리</h2>
-        <p class="text-xs text-slate-400 mt-0.5">후보 커스텀, 사진 비율 설정 및 실시간 집계</p>
+      <div class="border-b border-slate-100 pb-2 flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-black text-slate-800 tracking-tight">선거 관리</h2>
+          <p class="text-[11px] text-slate-400">브라질 공식 총선 선거구 및 후보자 관리</p>
+        </div>
+        <span class="text-[11px] font-bold px-2.5 py-0.5 bg-blue-100 text-blue-700 rounded-full border border-blue-200">Justiça Eleitoral UE2026</span>
       </div>
 
-      <!-- 선거 유형 선택 드롭다운 -->
+      <!-- 투표 진행 절차 커스텀 설정 체크박스 박스 -->
+      <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-bold text-slate-800">⚙️ 투표 진행 절차 설정</span>
+            <span class="text-[10px] text-slate-500">(체크 시 선거 포함)</span>
+          </div>
+          <span id="activeStagesCountBadge" class="text-[10px] font-mono font-bold text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded border border-blue-200">5/5 활성</span>
+        </div>
+        <div id="stageCheckboxesContainer" class="space-y-1.5">
+          <!-- JS 동적 주입 -->
+        </div>
+      </div>
+
+      <!-- 현재 관리 직책 선택 드롭다운 -->
       <div>
-        <div class="flex justify-between items-center mb-1.5">
-          <label class="block text-sm font-semibold text-slate-700">선거 유형 선택</label>
+        <div class="flex justify-between items-center mb-1">
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">현재 관리 직책 선택</label>
           <div class="flex items-center gap-1.5">
             <input type="checkbox" id="seqVoteToggle" class="rounded text-blue-600 focus:ring-blue-500 w-3.5 h-3.5 cursor-pointer" checked />
-            <label for="seqVoteToggle" class="text-xs font-semibold text-slate-600 cursor-pointer select-none">연속 선거 진행</label>
+            <label for="seqVoteToggle" id="seqVoteLabel" class="text-xs font-semibold text-slate-600 cursor-pointer select-none">연속 선거 진행</label>
           </div>
         </div>
+
         <div class="relative">
-          <select id="roleSelector" class="w-full appearance-none bg-white border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-8 transition">
-            <option value="dep_fed">1. 연방하원의원 선거 (Deputado Federal - 4자리)</option>
-            <option value="dep_est">2. 주하원의원 선거 (Deputado Estadual - 5자리)</option>
-            <option value="senador">3. 상원의원 선거 (Senador - 3자리)</option>
-            <option value="governador">4. 주지사 선거 (Governador - 2자리)</option>
-            <option value="presidente">5. 대통령 선거 (Presidente - 2자리)</option>
+          <select id="roleSelector" class="w-full appearance-none bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-8 transition">
+            <!-- JS 동적 주입 -->
           </select>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-500">
             <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
@@ -381,131 +364,121 @@
         </div>
       </div>
 
-      <!-- 현재 등록된 후보 목록 -->
       <div>
-        <div class="flex justify-between items-center mb-1.5">
+        <div class="flex justify-between items-center mb-1">
           <span class="text-xs font-bold uppercase tracking-wider text-slate-500">등록된 후보 목록</span>
-          <span id="candidateCount" class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">0명</span>
+          <span id="candidateCount" class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">0명</span>
         </div>
-        <div id="candidatesListContainer" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+        <div id="candidatesListContainer" class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
           <!-- JS 렌더링 -->
         </div>
       </div>
 
-      <!-- 관리자 액션 버튼 4개 (이미지 속 2x2 그리드 색상 완벽 구현) -->
-      <div class="grid grid-cols-2 gap-2.5 pt-1">
-        <button id="btnViewResults" class="bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold py-2.5 px-3 rounded-lg text-sm shadow transition flex items-center justify-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+      <!-- 관리자 액션 버튼 4개 -->
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button id="btnViewResults" class="bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold py-2 px-3 rounded-lg text-xs shadow transition flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
           투표 결과 보기
         </button>
-        <button id="btnResetAllVotes" class="bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white font-bold py-2.5 px-3 rounded-lg text-sm shadow transition flex items-center justify-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+        <button id="btnResetAllVotes" class="bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white font-bold py-2 px-3 rounded-lg text-xs shadow transition flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
           모든 투표 초기화
         </button>
-        <button id="btnExportCandidates" class="bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-2.5 px-3 rounded-lg text-sm shadow transition flex items-center justify-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+        <button id="btnExportCandidates" class="bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-2 px-3 rounded-lg text-xs shadow transition flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
           후보/결과 파일 저장
         </button>
-        <button id="btnImportCandidatesTrigger" class="bg-slate-700 hover:bg-slate-800 active:scale-[0.98] text-white font-bold py-2.5 px-3 rounded-lg text-sm shadow transition flex items-center justify-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12"></path></svg>
+        <button id="btnImportCandidatesTrigger" class="bg-slate-700 hover:bg-slate-800 active:scale-[0.98] text-white font-bold py-2 px-3 rounded-lg text-xs shadow transition flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12"></path></svg>
           후보/결과 파일 로드
         </button>
         <input type="file" id="candidateFileInput" accept=".json" class="hidden" />
       </div>
 
-      <!-- 새 후보 추가 폼 구역 -->
-      <div class="border-t border-slate-100 pt-3">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-bold text-slate-800">새 후보 추가</span>
-          <!-- 사진 비율 선택 (3:4 or 4:5) -->
-          <div class="flex items-center gap-1 text-[11px] bg-slate-100 px-2 py-0.5 rounded">
+      <div class="border-t border-slate-100 pt-2.5">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-bold text-slate-800">새 후보 추가</span>
+          <div class="flex items-center gap-1 text-[10px] bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
             <span class="text-slate-500">사진 비율:</span>
-            <button type="button" id="btnRatio34" class="px-1.5 py-0.5 font-bold rounded bg-blue-600 text-white transition">3:4</button>
-            <button type="button" id="btnRatio45" class="px-1.5 py-0.5 font-bold rounded text-slate-600 hover:text-slate-900 transition">4:5</button>
+            <button type="button" id="btnRatio34" class="px-1.5 py-0.2 font-bold rounded bg-blue-600 text-white transition">3:4</button>
+            <button type="button" id="btnRatio45" class="px-1.5 py-0.2 font-bold rounded text-slate-600 hover:text-slate-900 transition">4:5</button>
           </div>
         </div>
 
-        <!-- 이름, 정당, 번호 및 [번호생성] 버튼 -->
-        <div class="grid grid-cols-12 gap-2 mb-2.5">
-          <input type="text" id="newCandName" placeholder="이름" class="col-span-5 border border-slate-300 rounded-lg px-2.5 py-2 text-xs focus:ring-1 focus:ring-blue-500 outline-none" />
-          <input type="text" id="newCandParty" placeholder="정당" class="col-span-4 border border-slate-300 rounded-lg px-2.5 py-2 text-xs focus:ring-1 focus:ring-blue-500 outline-none" />
+        <div class="grid grid-cols-12 gap-1.5 mb-2">
+          <input type="text" id="newCandName" placeholder="이름" class="col-span-5 border border-slate-300 rounded px-2 py-1.5 text-xs focus:ring-1 focus:ring-blue-500 outline-none" />
+          <input type="text" id="newCandParty" placeholder="정당" class="col-span-4 border border-slate-300 rounded px-2 py-1.5 text-xs focus:ring-1 focus:ring-blue-500 outline-none" />
           <div class="col-span-3 relative flex items-center">
-            <input type="text" id="newCandNumber" placeholder="번호" maxlength="5" class="w-full border border-slate-300 rounded-lg pl-2 pr-6 py-2 text-xs font-mono font-bold focus:ring-1 focus:ring-blue-500 outline-none" />
-            <button type="button" id="btnGenNumber" title="유효 번호 자동생성" class="absolute right-1 text-slate-400 hover:text-blue-600 p-1">
+            <input type="text" id="newCandNumber" placeholder="번호" maxlength="5" class="w-full border border-slate-300 rounded pl-1.5 pr-5 py-1.5 text-xs font-mono font-bold focus:ring-1 focus:ring-blue-500 outline-none" />
+            <button type="button" id="btnGenNumber" title="유효 번호 자동생성" class="absolute right-1 text-slate-400 hover:text-blue-600 p-0.5">
               🎲
             </button>
           </div>
         </div>
 
-        <!-- 이미지 업로드/입력 카드 (이미지와 동일한 대칭 분할 레이아웃) -->
-        <div class="grid grid-cols-2 gap-2 mb-3">
-          
-          <!-- 좌측: 후보자 사진 (드래그 앤 드롭 및 웹 링크 지원) -->
-          <div id="candDropZone" class="border-2 border-dashed border-slate-300 rounded-xl p-2.5 flex flex-col items-center justify-between text-center bg-slate-50/60 hover:bg-slate-50 transition min-h-[145px] cursor-pointer">
-            <div id="candPhotoPreviewWrap" class="w-14 h-18 bg-white rounded border border-slate-200 overflow-hidden flex items-center justify-center text-xl shadow-xs pointer-events-none">
+        <!-- 이미지 드래그&드롭 / URL 업로드 영역 -->
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <!-- 후보자 사진 -->
+          <div id="candDropZone" class="border-2 border-dashed border-slate-300 rounded-lg p-2 flex flex-col items-center justify-between text-center bg-slate-50/70 hover:bg-slate-50 transition min-h-[135px] cursor-pointer">
+            <div id="candPhotoPreviewWrap" class="w-12 h-16 bg-white rounded border border-slate-200 overflow-hidden flex items-center justify-center text-lg shadow-xs pointer-events-none">
               <span id="candPhotoPreviewText">👤</span>
             </div>
             <div class="w-full">
-              <label class="block text-[11px] font-semibold text-slate-600 cursor-pointer hover:text-blue-600">
-                <span>사진 클릭/드래그</span>
+              <label class="block text-[10px] font-semibold text-slate-600 cursor-pointer hover:text-blue-600">
+                <span>사진 드래그/클릭</span>
                 <input type="file" id="candPhotoFile" accept="image/*" class="hidden" />
               </label>
-              <div class="text-[9px] text-slate-400 uppercase my-0.5">— OR —</div>
-              <input type="text" id="candPhotoUrl" placeholder="웹 이미지 링크 (URL)" class="w-full text-[10px] border border-slate-200 rounded px-1.5 py-1 outline-none bg-white focus:border-blue-400" />
+              <div class="text-[8px] text-slate-400 uppercase my-0.5">— OR —</div>
+              <input type="text" id="candPhotoUrl" placeholder="웹 이미지 링크 (URL)" class="w-full text-[9px] border border-slate-200 rounded px-1.5 py-0.5 outline-none bg-white focus:border-blue-400" />
             </div>
           </div>
 
-          <!-- 우측: 부통령/러닝메이트 (해당 직책에 한함) -->
-          <div id="viceContainer" class="border border-slate-200 rounded-xl p-2.5 flex flex-col justify-between bg-slate-50/40 min-h-[145px]">
-            <input type="text" id="newViceName" placeholder="러닝메이트(부통령) 이름" class="w-full border border-slate-300 rounded px-2 py-1 text-xs mb-1 outline-none focus:border-blue-400" />
+          <!-- 부후보 (Vice) -->
+          <div id="viceContainer" class="border border-slate-200 rounded-lg p-2 flex flex-col justify-between bg-slate-50/40 min-h-[135px]">
+            <input type="text" id="newViceName" placeholder="러닝메이트(부통령/부지사) 이름" class="w-full border border-slate-300 rounded px-2 py-1 text-xs mb-1 outline-none focus:border-blue-400" />
             
-            <div id="viceDropZone" class="border-2 border-dashed border-slate-300 rounded-lg p-1.5 flex flex-col items-center text-center cursor-pointer bg-slate-50/60 hover:bg-slate-50 transition">
-              <div id="vicePhotoPreviewWrap" class="w-10 h-13 bg-white rounded border border-slate-200 overflow-hidden flex items-center justify-center text-sm shadow-xs mb-1 pointer-events-none">
+            <div id="viceDropZone" class="border-2 border-dashed border-slate-300 rounded p-1 flex flex-col items-center text-center cursor-pointer bg-slate-50/70 hover:bg-slate-50 transition">
+              <div id="vicePhotoPreviewWrap" class="w-9 h-12 bg-white rounded border border-slate-200 overflow-hidden flex items-center justify-center text-xs shadow-xs mb-1 pointer-events-none">
                 <span id="vicePhotoPreviewText">👥</span>
               </div>
-              <label class="text-[10px] font-medium text-slate-600 cursor-pointer hover:text-blue-600">
+              <label class="text-[9px] font-medium text-slate-600 cursor-pointer hover:text-blue-600">
                 <span>부통령 사진 클릭/드래그</span>
                 <input type="file" id="vicePhotoFile" accept="image/*" class="hidden" />
               </label>
-              <span class="text-[8px] text-slate-400 my-0.5">— OR —</span>
-              <input type="text" id="vicePhotoUrl" placeholder="웹 이미지 링크 (URL)" class="w-full text-[9px] border border-slate-200 rounded px-1.5 py-0.5 outline-none bg-white focus:border-blue-400" />
+              <input type="text" id="vicePhotoUrl" placeholder="웹 이미지 URL" class="w-full text-[8.5px] border border-slate-200 rounded px-1 py-0.5 outline-none bg-white focus:border-blue-400 mt-1" />
             </div>
           </div>
-
         </div>
 
-        <!-- 후보 추가 버튼 -->
-        <button id="btnAddCandidate" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-bold py-2.5 rounded-lg text-sm shadow transition">
-          후보 추가
+        <button id="btnAddCandidate" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold py-2 rounded-lg text-xs shadow transition">
+          후보 등록
         </button>
-
       </div>
 
     </aside>
 
   </div>
 
-  <!-- 결과 모달 (Boletim de Urna - 선거 결과표) -->
   <div id="resultModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-200">
       
       <div class="flex justify-between items-center border-b border-slate-200 pb-3 mb-4">
         <div>
-          <h3 class="text-xl font-black text-slate-900">🗳️ 투표 결과 (Boletim de Urna)</h3>
+          <h3 class="text-lg font-black text-slate-900">🗳️ 투표 결과 (Boletim de Urna)</h3>
           <p class="text-xs text-slate-500">실시간 누적 개표 결과 보고서</p>
         </div>
         <button id="btnCloseModal" class="text-slate-400 hover:text-slate-700 text-2xl font-bold p-1 leading-none">&times;</button>
       </div>
 
-      <div id="modalResultContent" class="space-y-4 text-sm font-sans">
+      <div id="modalResultContent" class="space-y-3 text-xs font-sans">
         <!-- JS 동적 렌더링 -->
       </div>
 
       <div class="flex gap-2 justify-end pt-4 mt-4 border-t border-slate-100">
-        <button id="btnExportResultJson" class="px-3.5 py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-slate-900 transition flex items-center gap-1.5">
+        <button id="btnExportResultJson" class="px-3.5 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-slate-900 transition flex items-center gap-1.5">
           <span>JSON 결과 다운로드</span>
         </button>
-        <button id="btnCloseModalBtn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-lg text-xs font-bold hover:bg-slate-300 transition">
+        <button id="btnCloseModalBtn" class="px-4 py-1.5 bg-slate-200 text-slate-800 rounded-lg text-xs font-bold hover:bg-slate-300 transition">
           닫기
         </button>
       </div>
@@ -519,125 +492,127 @@
   </div>
 
   <script>
-    /* 1. 선거 직책(Roles) 데이터 */
-    const ROLES = {
+    const BRAZIL_ROLES = {
       dep_fed: {
         id: 'dep_fed',
         name: 'Deputado Federal',
         shortTab: 'Dep. Federal',
-        krName: '연방하원의원 (4자리)',
         digits: 4,
-        hasVice: false
+        hasVice: false,
+        poolKey: 'dep_fed'
       },
       dep_est: {
         id: 'dep_est',
         name: 'Deputado Estadual',
         shortTab: 'Dep. Estadual',
-        krName: '주하원의원 (5자리)',
         digits: 5,
-        hasVice: false
+        hasVice: false,
+        poolKey: 'dep_est'
       },
-      senador: {
-        id: 'senador',
-        name: 'Senador',
-        shortTab: 'Senador',
-        krName: '상원의원 (3자리)',
+      sen_1: {
+        id: 'sen_1',
+        name: 'Senador - 1ª vaga',
+        shortTab: 'Senador - 1ª vaga',
         digits: 3,
-        hasVice: true,
-        viceLabel: '1º Suplente'
+        hasVice: false,
+        poolKey: 'senador'
+      },
+      sen_2: {
+        id: 'sen_2',
+        name: 'Senador - 2ª vaga',
+        shortTab: 'Senador - 2ª vaga',
+        digits: 3,
+        hasVice: false,
+        poolKey: 'senador'
       },
       governador: {
         id: 'governador',
         name: 'Governador',
         shortTab: 'Governador',
-        krName: '주지사 (2자리)',
         digits: 2,
         hasVice: true,
-        viceLabel: 'Vice-Governador'
+        viceLabel: 'Vice-Governador',
+        poolKey: 'governador'
       },
       presidente: {
         id: 'presidente',
-        name: 'Presidente',
+        name: 'Presidente da República',
         shortTab: 'Presidente',
-        krName: '대통령 (2자리)',
         digits: 2,
         hasVice: true,
-        viceLabel: 'Vice-Presidente'
+        viceLabel: 'Vice-Presidente',
+        poolKey: 'presidente'
       }
     };
 
-    /* 2. 초기 후보자 데이터베이스 (브라질 현실 후보 및 사진 속 샘플 후보) */
+    const BRAZIL_SEQUENCE = ['dep_fed', 'dep_est', 'sen_1', 'sen_2', 'governador', 'presidente'];
+
+    // 사용자가 체크박스로 활성화/비활성화 가능한 단계 상태
+    let enabledRoles = {
+      dep_fed: true,
+      dep_est: true,
+      sen_1: true,
+      sen_2: true,
+      governador: true,
+      presidente: true
+    };
+
+    function getActiveSequence() {
+      const active = BRAZIL_SEQUENCE.filter(key => enabledRoles[key]);
+      return active.length > 0 ? active : [BRAZIL_SEQUENCE[0]];
+    }
+
+    // 기본 브라질 공식 후보 데이터 (상원의원은 1차·2차 공통 풀 'senador' 사용)
     let CANDIDATES_DB = {
       dep_fed: {
-        '2222': { name: 'Eduardo Bolsonaro', party: 'PL', avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=300&q=80' },
-        '5050': { name: 'Guilherme Boulos', party: 'PSOL', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80' }
+        '1301': { name: 'Geraldo Alckmin', party: 'PSB', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80' },
+        '2222': { name: 'Eduardo Bolsonaro', party: 'PL', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80' }
       },
       dep_est: {
-        '92001': { name: 'Frevo', party: 'PMus', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80' },
-        '91001': { name: 'Golfe', party: 'PEsp', avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=300&q=80' }
+        '92001': { name: 'Frevo', party: 'PMus', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80' },
+        '13555': { name: 'Marina Silva', party: 'REDE', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80' }
       },
       senador: {
-        '222': { name: 'Marcos Pontes', party: 'PL', vice: 'Alberto Astronauta', avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=300&q=80' },
-        '400': { name: 'Márcio França', party: 'PSB', vice: 'Augusto Vice', avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80' }
+        '131': { name: 'Camilo Santana', party: 'PT', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80' },
+        '222': { name: 'Marcos Pontes', party: 'PL', avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=300&q=80' },
+        '456': { name: 'Mara Gabrilli', party: 'PSDB', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80' }
       },
       governador: {
-        '10': { name: 'Tarcísio de Freitas', party: 'Republicanos', vice: 'Felicio Ramuth', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80' },
-        '13': { name: 'Fernando Haddad', party: 'PT', vice: 'Lúcia França', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80' }
+        '13': { name: 'Fernando Haddad', party: 'PT', vice: 'Lúcia França', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80' },
+        '10': { name: 'Tarcísio de Freitas', party: 'Republicanos', vice: 'Felicio Ramuth', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80' }
       },
       presidente: {
-        '13': { name: 'Luiz Inácio Lula da Silva', party: 'PT', vice: 'Geraldo Alckmin', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80', viceAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80' },
-        '22': { name: 'Jair Bolsonaro', party: 'PL', vice: 'Walter Braga Netto', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80', viceAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80' },
-        '15': { name: 'Simone Tebet', party: 'MDB', vice: 'Mara Gabrilli', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80', viceAvatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80' }
+        '13': { name: 'Luiz Inácio Lula da Silva', party: 'PT', vice: 'Geraldo Alckmin', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80', viceAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80' },
+        '22': { name: 'Jair Bolsonaro', party: 'PL', vice: 'Braga Netto', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80', viceAvatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80' }
       }
     };
 
-    /* 3. 누적 투표 기록 (Boletim de Urna) */
-    let ELECTION_RESULTS = {
-      dep_fed: { votes: {}, branco: 0, nulo: 0, total: 0 },
-      dep_est: { votes: {}, branco: 0, nulo: 0, total: 0 },
-      senador: { votes: {}, branco: 0, nulo: 0, total: 0 },
-      governador: { votes: {}, branco: 0, nulo: 0, total: 0 },
-      presidente: { votes: {}, branco: 0, nulo: 0, total: 0 }
-    };
+    function getCandidatesMapForRole(roleKey) {
+      const poolKey = BRAZIL_ROLES[roleKey]?.poolKey || roleKey;
+      if (!CANDIDATES_DB[poolKey]) {
+        CANDIDATES_DB[poolKey] = {};
+      }
+      return CANDIDATES_DB[poolKey];
+    }
 
-    /* 브라질 공식 총선 순서 체인 */
-    const SEQUENCE_ROLES = ['dep_fed', 'dep_est', 'senador', 'governador', 'presidente'];
+    let ELECTION_RESULTS = {};
+    function initResults() {
+      ELECTION_RESULTS = {};
+      BRAZIL_SEQUENCE.forEach(r => {
+        ELECTION_RESULTS[r] = { votes: {}, branco: 0, nulo: 0, total: 0 };
+      });
+    }
+    initResults();
 
-    /* 현재 상태 */
-    let currentRoleKey = 'dep_fed';
+    let currentRoleKey = BRAZIL_SEQUENCE[0];
     let typedNumber = '';
     let isWhiteVote = false;
     let isFinished = false;
-    let isInterTonePlaying = false;
-    let currentPhotoRatio = '3:4'; // '3:4' or '4:5'
+    let currentPhotoRatio = '3:4';
     let currentUploadedCandPhoto = '';
     let currentUploadedVicePhoto = '';
-
-    /* Web Audio API 사운드 합성기 (인스타그램 및 TSE 실물과 일치) */
-    let audioCtx = null;
-    function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-    }
-
-    // 일반 키패드 비프음
-    function playKeyTone() {
-      initAudio();
-      try {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(1420, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.055);
-      } catch (e) {}
-    }
-
-    // 단계별(각 직책별) CONFIRMA 성공 시 울리는 중간 확인 비프음
+    let firstSenatorVoteNumber = null; // 상원의원 1차 투표 번호 기록 (동일 후보 2차 투표 무효화 체크용)
+    // 단계별 확인음 (940Hz 사각파)
     function playStepConfirmTone() {
       initAudio();
       try {
@@ -655,14 +630,11 @@
       } catch (e) {}
     }
 
-    // 인스타그램 영상 및 실물 Urna Eletrônica 고유의 FIM 완료 사운드
-    // (연속 5회의 스타카토 비프음 후 이어지는 깊고 맑은 TSE 시그니처 롱톤)
+    // 최종 투표 완료음 (TSE 브라질 공식 시그니처 롱톤)
     function playFimTone() {
       initAudio();
       try {
         const now = audioCtx.currentTime;
-        
-        // 1. 앞선 5회 연속 비프음 ("삐-삐-삐-삐-삐")
         const beeps = [0, 0.075, 0.15, 0.225, 0.30];
         beeps.forEach(t => {
           const osc = audioCtx.createOscillator();
@@ -677,17 +649,13 @@
           osc.stop(now + t + 0.048);
         });
 
-        // 2. 우르나 특유의 종결 롱톤 (약 1.3초 지속되는 브라질 선거 시그니처음)
         const longStartTime = now + 0.39;
         const oscLong = audioCtx.createOscillator();
         const oscLongSub = audioCtx.createOscillator();
         const gainLong = audioCtx.createGain();
 
-        // 메인 톤
         oscLong.type = 'square';
         oscLong.frequency.setValueAtTime(840, longStartTime);
-        
-        // 배음
         oscLongSub.type = 'sine';
         oscLongSub.frequency.setValueAtTime(1680, longStartTime);
 
@@ -706,7 +674,6 @@
       } catch (e) {}
     }
 
-    // 알림 토스트 UI
     function showToast(msg) {
       const toast = document.getElementById('toastBox');
       const text = document.getElementById('toastMsg');
@@ -717,30 +684,83 @@
       }, 2500);
     }
 
-    // 화면 렌더링 함수
+    function renderStageCheckboxes() {
+      const container = document.getElementById('stageCheckboxesContainer');
+      const activeList = getActiveSequence();
+      document.getElementById('activeStagesCountBadge').textContent = `${activeList.length}/${BRAZIL_SEQUENCE.length} 활성`;
+      document.getElementById('seqVoteLabel').textContent = `${activeList.length}단계 연속 선거 진행`;
+
+      container.innerHTML = BRAZIL_SEQUENCE.map((rKey, idx) => {
+        const isChecked = !!enabledRoles[rKey];
+        const rObj = BRAZIL_ROLES[rKey];
+
+        return `
+          <label class="flex items-center justify-between px-2.5 py-1.5 bg-white hover:bg-slate-100 rounded-lg border ${isChecked ? 'border-slate-300 shadow-xs' : 'border-dashed border-slate-200 opacity-60'} cursor-pointer select-none text-[11px] transition">
+            <div class="flex items-center gap-2 truncate">
+              <input type="checkbox" class="stage-toggle rounded text-blue-600 focus:ring-blue-500 w-3.5 h-3.5 cursor-pointer" data-role="${rKey}" ${isChecked ? 'checked' : ''} />
+              <span class="font-medium text-slate-800 truncate">${idx + 1}. ${rObj.name}</span>
+            </div>
+            <span class="text-[9.5px] font-mono px-1.5 py-0.2 rounded font-bold ${isChecked ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-400'}">${rObj.digits}자리</span>
+          </label>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.stage-toggle').forEach(input => {
+        input.addEventListener('change', (e) => {
+          const rKey = e.target.getAttribute('data-role');
+          const isNowChecked = e.target.checked;
+          
+          if (!isNowChecked) {
+            const willRemaining = BRAZIL_SEQUENCE.filter(k => (k === rKey ? false : enabledRoles[k]));
+            if (willRemaining.length === 0) {
+              e.target.checked = true;
+              showToast('최소 한 개의 선거 단계는 선택되어 있어야 합니다.');
+              return;
+            }
+          }
+
+          enabledRoles[rKey] = isNowChecked;
+          const activeSeq = getActiveSequence();
+
+          if (!enabledRoles[currentRoleKey]) {
+            currentRoleKey = activeSeq[0];
+          }
+
+          renderStageCheckboxes();
+          updateRoleDropdown();
+          syncRoleUi();
+          renderCandidateList();
+          renderScreen();
+
+          const rObj = BRAZIL_ROLES[rKey];
+          showToast(`선거 단계 [${rObj.name}] ${isNowChecked ? '포함됨' : '제외됨'}`);
+        });
+      });
+    }
+
     function renderScreen() {
       const screen = document.getElementById('screenContent');
       const footerPrompt = document.getElementById('screenFooterPrompt');
       const tabsContainer = document.getElementById('topTabsContainer');
-      const role = ROLES[currentRoleKey];
+      const role = BRAZIL_ROLES[currentRoleKey];
+      const activeSequence = getActiveSequence();
 
-      // 상단 탭 렌더링 (사진과 일치하는 폴더 탭 스타일 + 클릭 시 즉시 해당 분야 이동)
-      const roleKeys = SEQUENCE_ROLES;
-      tabsContainer.innerHTML = roleKeys.map(k => {
+      // 상단 탭 렌더링 (활성화된 단계만 표시)
+      tabsContainer.innerHTML = activeSequence.map(k => {
         const isActive = (k === currentRoleKey);
+        const rObj = BRAZIL_ROLES[k];
+
         return `
-          <button type="button" class="tab-btn px-2 py-0.5 text-[8px] sm:text-[9px] font-urna-screen tracking-tight transition cursor-pointer select-none border-b-2 ${isActive ? 'bg-[#18191c] text-white font-bold border-amber-400 shadow-sm' : 'bg-[#bfc3cb] hover:bg-[#a8adb7] text-[#33373e] font-medium border-transparent'}" data-role="${k}">
-            ${ROLES[k].shortTab}
+          <button type="button" class="tab-btn px-1.5 sm:px-2 py-0.5 text-[7.5px] sm:text-[9px] font-urna-screen tracking-tight transition cursor-pointer select-none border-b-2 ${isActive ? 'bg-[#18191c] text-white font-bold border-amber-400 shadow-sm' : 'bg-[#bfc3cb] hover:bg-[#a8adb7] text-[#33373e] font-medium border-transparent'}" data-role="${k}">
+            ${rObj.shortTab}
           </button>
         `;
       }).join('');
 
-      // 상단 탭 클릭 이벤트 바인딩
       tabsContainer.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
-          const targetRole = btn.getAttribute('data-role');
-          switchRole(targetRole);
+          switchRole(btn.getAttribute('data-role'));
         });
       });
 
@@ -759,6 +779,16 @@
       }
 
       footerPrompt.style.display = 'block';
+      footerPrompt.innerHTML = `
+        <div class="font-normal text-stone-800">Aperte a tecla:</div>
+        <div class="pl-2">
+          <div><strong class="font-bold text-stone-900">CONFIRMA</strong> para CONFIRMAR este voto</div>
+          <div><strong class="font-bold text-stone-900">CORRIGE</strong> para REINICIAR este voto</div>
+        </div>
+      `;
+
+      const roleDisplayName = role.name;
+      const viceLabel = role.viceLabel || 'Vice';
 
       // 2. 백지 투표 (VOTO EM BRANCO)
       if (isWhiteVote) {
@@ -766,7 +796,7 @@
           <div class="flex-1 flex flex-col justify-between py-1.5 font-urna-screen">
             <div>
               <div class="scale-text-xs uppercase tracking-normal text-stone-700 font-normal">SEU VOTO PARA</div>
-              <h2 class="scale-text-xl font-bold text-stone-900 tracking-tight leading-tight mt-0.5">${role.name}</h2>
+              <h2 class="scale-text-xl font-bold text-stone-900 tracking-tight leading-tight mt-0.5">${roleDisplayName}</h2>
             </div>
             
             <div class="py-5 text-center">
@@ -783,13 +813,12 @@
         return;
       }
 
-      // 3. 후보자 번호/정보/사진 레이아웃
-      const candidates = CANDIDATES_DB[currentRoleKey] || {};
+      const candidates = getCandidatesMapForRole(currentRoleKey);
       const candidate = candidates[typedNumber] || null;
       const isCompleteNumber = typedNumber.length === role.digits;
-      const isNullVote = isCompleteNumber && !candidate;
+      const isDuplicateSenateVote = (currentRoleKey === 'sen_2' && typedNumber === firstSenatorVoteNumber && firstSenatorVoteNumber !== null);
+      const isNullVote = isCompleteNumber && (!candidate || isDuplicateSenateVote);
 
-      // 번호 박스
       let boxesHtml = '';
       for (let i = 0; i < role.digits; i++) {
         const char = typedNumber[i] || '';
@@ -802,12 +831,10 @@
         `;
       }
 
-      // 사진 비율 클래스
       const aspectClass = (currentPhotoRatio === '4:5') ? 'aspect-[4/5] w-[84px] sm:w-[96px]' : 'aspect-[3/4] w-[80px] sm:w-[92px]';
 
-      // 우측 상단 후보자 사진 영역
       let photoSectionHtml = '';
-      if (candidate) {
+      if (candidate && !isDuplicateSenateVote) {
         photoSectionHtml = `
           <div class="flex flex-col items-center">
             <div class="${aspectClass} bg-stone-200 border-[1.5px] border-stone-800 rounded-xs overflow-hidden shadow-xs relative">
@@ -817,7 +844,7 @@
             ${role.hasVice && candidate.vice ? `
               <div class="w-14 aspect-[3/4] bg-stone-200 border border-stone-700 rounded-xs overflow-hidden shadow-xs relative mt-1">
                 ${candidate.viceAvatar ? `<img src="${candidate.viceAvatar}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x133/dbe2d8/333333?text=Vice';" />` : `<div class="w-full h-full flex items-center justify-center text-sm">👥</div>`}
-                <span class="absolute bottom-0 inset-x-0 bg-stone-900/85 text-[6.5px] text-white text-center py-0.5 font-bold uppercase font-urna-screen">VICE</span>
+                <span class="absolute bottom-0 inset-x-0 bg-stone-900/85 text-[6.5px] text-white text-center py-0.5 font-bold uppercase font-urna-screen">${viceLabel}</span>
               </div>
             ` : ''}
           </div>
@@ -832,12 +859,11 @@
 
       screen.innerHTML = `
         <div class="flex-1 flex flex-col justify-between text-stone-900 py-1 font-urna-screen">
-          
           <div class="flex justify-between items-start">
             <div class="space-y-1 flex-1 pr-1">
               <div>
                 <div class="scale-text-xs uppercase text-stone-700 font-normal">SEU VOTO PARA</div>
-                <h2 class="scale-text-xl font-bold text-stone-950 tracking-tight leading-tight">${role.name}</h2>
+                <h2 class="scale-text-xl font-bold text-stone-950 tracking-tight leading-tight">${roleDisplayName}</h2>
               </div>
 
               <!-- 번호 입력 박스 -->
@@ -850,7 +876,7 @@
 
               <!-- 후보자 정보 텍스트 -->
               <div class="space-y-0.5 pt-1 scale-text-sm">
-                ${candidate ? `
+                ${(candidate && !isDuplicateSenateVote) ? `
                   <div class="flex items-baseline gap-2">
                     <span class="text-stone-700 font-normal scale-text-sm w-12 shrink-0">Nome:</span>
                     <span class="text-stone-950 font-bold scale-text-sm tracking-tight truncate">${candidate.name}</span>
@@ -861,7 +887,7 @@
                   </div>
                   ${candidate.vice ? `
                     <div class="flex items-baseline gap-2">
-                      <span class="text-stone-700 font-normal scale-text-xs shrink-0">${role.viceLabel}:</span>
+                      <span class="text-stone-700 font-normal scale-text-xs shrink-0">${viceLabel}:</span>
                       <span class="text-stone-950 font-bold scale-text-xs tracking-tight truncate">${candidate.vice}</span>
                     </div>
                   ` : ''}
@@ -876,7 +902,7 @@
 
                 ${isNullVote ? `
                   <div class="pt-1">
-                    <div class="scale-text-xs text-red-700 font-bold uppercase tracking-wider">NÚMERO ERRADO</div>
+                    <div class="scale-text-xs text-red-700 font-bold uppercase tracking-wider">${isDuplicateSenateVote ? 'VOTO REPETIDO (1ª VAGA)' : 'NÚMERO ERRADO'}</div>
                     <div class="scale-text-lg font-black text-stone-950 tracking-wide text-blink">VOTO NULO</div>
                   </div>
                 ` : ''}
@@ -889,42 +915,58 @@
             </div>
           </div>
 
-          <!-- 확인 알림 깜빡임 문구 -->
+          <!-- 확인 안내 문구 -->
           <div class="text-center py-0.5">
             <div class="scale-text-base font-bold text-stone-950 tracking-wider ${isCompleteNumber || isWhiteVote ? 'text-blink' : 'opacity-0'}">
               CONFIRA O SEU VOTO
             </div>
           </div>
-
         </div>
       `;
     }
 
+    function updateRoleDropdown() {
+      const select = document.getElementById('roleSelector');
+      const activeSequence = getActiveSequence();
+
+      select.innerHTML = activeSequence.map((rKey, idx) => {
+        const rObj = BRAZIL_ROLES[rKey];
+        return `<option value="${rKey}">${idx + 1}. ${rObj.name} (${rObj.digits}자리)</option>`;
+      }).join('');
+
+      if (!enabledRoles[currentRoleKey]) {
+        currentRoleKey = activeSequence[0];
+      }
+      select.value = currentRoleKey;
+    }
+
+    function syncRoleUi() {
+      const role = BRAZIL_ROLES[currentRoleKey];
+      document.getElementById('viceContainer').style.display = role.hasVice ? 'flex' : 'none';
+      const candNumInput = document.getElementById('newCandNumber');
+      candNumInput.maxLength = role.digits;
+      candNumInput.placeholder = `${role.digits}자리 번호`;
+    }
+
     function switchRole(roleKey) {
-      if (!ROLES[roleKey]) return;
+      if (!BRAZIL_ROLES[roleKey] || !enabledRoles[roleKey]) return;
       currentRoleKey = roleKey;
       isFinished = false;
       typedNumber = '';
       isWhiteVote = false;
 
-      // 우측 드롭다운 및 후보 입력란 동기화
       document.getElementById('roleSelector').value = roleKey;
-      const role = ROLES[roleKey];
-      const viceContainer = document.getElementById('viceContainer');
-      viceContainer.style.display = role.hasVice ? 'flex' : 'none';
-
-      const candNumInput = document.getElementById('newCandNumber');
-      candNumInput.maxLength = role.digits;
-      candNumInput.placeholder = `${role.digits}자리 번호`;
-
+      syncRoleUi();
       renderCandidateList();
       renderScreen();
-      showToast(`${role.shortTab} (${role.name}) 투표 단계로 전환되었습니다.`);
+      
+      const rObj = BRAZIL_ROLES[roleKey];
+      showToast(`${rObj.name} 투표 단계로 전환되었습니다.`);
     }
 
     function handleDigit(numStr) {
       if (isFinished || isWhiteVote) return;
-      const role = ROLES[currentRoleKey];
+      const role = BRAZIL_ROLES[currentRoleKey];
       if (typedNumber.length < role.digits) {
         typedNumber += numStr;
         playKeyTone();
@@ -955,58 +997,67 @@
         return;
       }
 
-      const role = ROLES[currentRoleKey];
+      const role = BRAZIL_ROLES[currentRoleKey];
       const isCompleteNumber = typedNumber.length === role.digits;
 
       if (isWhiteVote || isCompleteNumber) {
-        // 투표 결과 카운팅
         const currentElection = ELECTION_RESULTS[currentRoleKey];
         currentElection.total++;
 
         if (isWhiteVote) {
           currentElection.branco++;
+          if (currentRoleKey === 'sen_1') {
+            firstSenatorVoteNumber = '__BRANCO__';
+          }
         } else {
-          const cand = CANDIDATES_DB[currentRoleKey]?.[typedNumber];
-          if (cand) {
+          const candidates = getCandidatesMapForRole(currentRoleKey);
+          const cand = candidates[typedNumber];
+          
+          // 브라질 선거법 규칙: 1차 상원의원 투표와 2차 상원의원 투표에서 동일 후보 선택 시 2차 투표는 무효(NULO) 처리
+          const isDuplicateSenate = (currentRoleKey === 'sen_2' && typedNumber === firstSenatorVoteNumber && firstSenatorVoteNumber !== null);
+
+          if (cand && !isDuplicateSenate) {
             currentElection.votes[typedNumber] = (currentElection.votes[typedNumber] || 0) + 1;
           } else {
             currentElection.nulo++;
           }
+
+          if (currentRoleKey === 'sen_1') {
+            firstSenatorVoteNumber = typedNumber;
+          }
         }
 
         const isSequential = document.getElementById('seqVoteToggle').checked;
-        const currentIdx = SEQUENCE_ROLES.indexOf(currentRoleKey);
-        const hasNext = isSequential && currentIdx < SEQUENCE_ROLES.length - 1;
+        const activeSequence = getActiveSequence();
+        const currentIdx = activeSequence.indexOf(currentRoleKey);
+        const hasNext = isSequential && currentIdx >= 0 && currentIdx < activeSequence.length - 1;
 
         if (hasNext) {
-          // 다음 선거 단계로 전환 (중간 비프음 재생 후 자동 이동)
           playStepConfirmTone();
-          const nextRole = SEQUENCE_ROLES[currentIdx + 1];
+          const nextRole = activeSequence[currentIdx + 1];
           currentRoleKey = nextRole;
           typedNumber = '';
           isWhiteVote = false;
 
           document.getElementById('roleSelector').value = nextRole;
-          const nextRoleObj = ROLES[nextRole];
-          document.getElementById('viceContainer').style.display = nextRoleObj.hasVice ? 'flex' : 'none';
-          document.getElementById('newCandNumber').maxLength = nextRoleObj.digits;
-          document.getElementById('newCandNumber').placeholder = `${nextRoleObj.digits}자리 번호`;
-
+          syncRoleUi();
           renderCandidateList();
           renderScreen();
-          showToast(`다음 투표: ${nextRoleObj.shortTab} (${nextRoleObj.name})`);
+
+          const nextObj = BRAZIL_ROLES[nextRole];
+          showToast(`다음 투표: ${nextObj.name}`);
         } else {
-          // 최종 선거 종료: FIM 화면 및 TSE 시그니처 롱톤
           isFinished = true;
           renderScreen();
           playFimTone();
 
-          // 3.5초 후 초기 1단계(연방하원의원)로 자동 리셋
           setTimeout(() => {
-            currentRoleKey = SEQUENCE_ROLES[0];
+            const firstActive = getActiveSequence()[0];
+            currentRoleKey = firstActive;
+            firstSenatorVoteNumber = null;
             document.getElementById('roleSelector').value = currentRoleKey;
             resetVoteScreen();
-          }, 3500);
+          }, 3600);
         }
       } else {
         playKeyTone();
@@ -1017,14 +1068,14 @@
       typedNumber = '';
       isWhiteVote = false;
       isFinished = false;
+      firstSenatorVoteNumber = null;
       renderScreen();
     }
 
-    // 관리자 패널 후보자 목록 갱신
     function renderCandidateList() {
       const container = document.getElementById('candidatesListContainer');
       const countElem = document.getElementById('candidateCount');
-      const candidates = CANDIDATES_DB[currentRoleKey] || {};
+      const candidates = getCandidatesMapForRole(currentRoleKey);
       const keys = Object.keys(candidates);
       countElem.textContent = `${keys.length}명`;
 
@@ -1043,7 +1094,7 @@
               </div>
               <div class="min-w-0">
                 <div class="text-xs font-bold text-slate-800 truncate">${c.name} <span class="text-slate-500 font-normal">(${c.party})</span> - <span class="text-blue-600 font-mono font-bold">${num}</span></div>
-                ${c.vice ? `<div class="text-[10px] text-slate-500 truncate">부통령: ${c.vice}</div>` : ''}
+                ${c.vice ? `<div class="text-[10px] text-slate-500 truncate">부통령/러닝메이트: ${c.vice}</div>` : ''}
               </div>
             </div>
             <button class="delete-cand-btn text-rose-500 hover:text-rose-700 hover:bg-rose-50 p-1.5 rounded text-sm font-bold transition shrink-0 ml-1" data-num="${num}" title="후보 삭제">
@@ -1053,11 +1104,11 @@
         `;
       }).join('');
 
-      // 삭제 버튼 바인딩
       container.querySelectorAll('.delete-cand-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const num = e.currentTarget.getAttribute('data-num');
-          delete CANDIDATES_DB[currentRoleKey][num];
+          const candidatesMap = getCandidatesMapForRole(currentRoleKey);
+          delete candidatesMap[num];
           renderCandidateList();
           renderScreen();
           showToast(`후보 [${num}] 가 삭제되었습니다.`);
@@ -1065,35 +1116,32 @@
       });
     }
 
-    // 선거 유형 변경 시 바인딩
-    const roleSelector = document.getElementById('roleSelector');
-    roleSelector.addEventListener('change', (e) => {
+    document.getElementById('roleSelector').addEventListener('change', (e) => {
       switchRole(e.target.value);
     });
 
-    // 사진 비율 버튼 토글
     const btnRatio34 = document.getElementById('btnRatio34');
     const btnRatio45 = document.getElementById('btnRatio45');
 
     btnRatio34.addEventListener('click', () => {
       currentPhotoRatio = '3:4';
-      btnRatio34.className = 'px-1.5 py-0.5 font-bold rounded bg-blue-600 text-white transition';
-      btnRatio45.className = 'px-1.5 py-0.5 font-bold rounded text-slate-600 hover:text-slate-900 transition';
+      btnRatio34.className = 'px-1.5 py-0.2 font-bold rounded bg-blue-600 text-white transition';
+      btnRatio45.className = 'px-1.5 py-0.2 font-bold rounded text-slate-600 hover:text-slate-900 transition';
       renderScreen();
       showToast('후보자 사진 비율이 3:4 로 설정되었습니다.');
     });
 
     btnRatio45.addEventListener('click', () => {
       currentPhotoRatio = '4:5';
-      btnRatio45.className = 'px-1.5 py-0.5 font-bold rounded bg-blue-600 text-white transition';
-      btnRatio34.className = 'px-1.5 py-0.5 font-bold rounded text-slate-600 hover:text-slate-900 transition';
+      btnRatio45.className = 'px-1.5 py-0.2 font-bold rounded bg-blue-600 text-white transition';
+      btnRatio34.className = 'px-1.5 py-0.2 font-bold rounded text-slate-600 hover:text-slate-900 transition';
       renderScreen();
       showToast('후보자 사진 비율이 4:5 로 설정되었습니다.');
     });
 
-    // 랜덤 미사용 유효 번호 생성
+    // 주사위 랜덤 번호 생성
     document.getElementById('btnGenNumber').addEventListener('click', () => {
-      const role = ROLES[currentRoleKey];
+      const role = BRAZIL_ROLES[currentRoleKey];
       const digits = role.digits;
       const min = Math.pow(10, digits - 1);
       const max = Math.pow(10, digits) - 1;
@@ -1102,18 +1150,17 @@
       do {
         generated = String(Math.floor(Math.random() * (max - min + 1)) + min);
         attempts++;
-      } while (CANDIDATES_DB[currentRoleKey][generated] && attempts < 100);
+      } while (CANDIDATES_DB[currentRoleKey]?.[generated] && attempts < 100);
 
       document.getElementById('newCandNumber').value = generated;
       showToast(`랜덤 번호 ${generated} 이(가) 생성되었습니다.`);
     });
 
-    // 공통 이미지 파싱 및 프리뷰 처리 함수
     function applyCandidateImage(src, isVice = false) {
       if (isVice) {
         currentUploadedVicePhoto = src;
         document.getElementById('vicePhotoPreviewWrap').innerHTML = `<img src="${src}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x133/dbe2d8/333333?text=Vice';"/>`;
-        showToast('부통령 사진이 적용되었습니다.');
+        showToast('부통령/러닝메이트 사진이 적용되었습니다.');
       } else {
         currentUploadedCandPhoto = src;
         document.getElementById('candPhotoPreviewWrap').innerHTML = `<img src="${src}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/120x150/dbe2d8/333333?text=Foto';"/>`;
@@ -1121,13 +1168,11 @@
       }
     }
 
-    // 드래그 앤 드롭 및 웹 사진 링크/파일 처리 핸들러 설정
     function setupDropZone(dropZoneId, fileInputId, urlInputId, isVice = false) {
       const dropZone = document.getElementById(dropZoneId);
       const fileInput = document.getElementById(fileInputId);
       const urlInput = document.getElementById(urlInputId);
 
-      // 드래그 진입/오버/이탈 시각 피드백
       ['dragenter', 'dragover'].forEach(eventName => {
         dropZone.addEventListener(eventName, (e) => {
           e.preventDefault();
@@ -1144,11 +1189,8 @@
         });
       });
 
-      // 드롭 이벤트 처리 (로컬 파일 및 웹에서 끌어온 이미지/URL 모두 지원)
       dropZone.addEventListener('drop', (e) => {
         const dt = e.dataTransfer;
-        
-        // 1. 로컬 이미지 파일 드롭인 경우
         if (dt.files && dt.files.length > 0) {
           const file = dt.files[0];
           if (file.type.startsWith('image/')) {
@@ -1159,7 +1201,6 @@
           }
         }
 
-        // 2. 웹페이지에서 이미지 자체나 URL 링크를 끌어다 놓은 경우
         const droppedText = dt.getData('text/uri-list') || dt.getData('text/plain') || dt.getData('text/html');
         if (droppedText) {
           let foundUrl = '';
@@ -1178,7 +1219,6 @@
         }
       });
 
-      // 파일 인풋 변경 시
       fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -1188,7 +1228,6 @@
         }
       });
 
-      // URL 직접 타이핑 또는 붙여넣기 시 즉시 프리뷰 반영
       urlInput.addEventListener('input', (e) => {
         const url = e.target.value.trim();
         if (url) {
@@ -1197,13 +1236,11 @@
       });
     }
 
-    // 후보자 및 부통령 드롭존 활성화
     setupDropZone('candDropZone', 'candPhotoFile', 'candPhotoUrl', false);
     setupDropZone('viceDropZone', 'vicePhotoFile', 'vicePhotoUrl', true);
 
-    // 후보 추가 버튼
     document.getElementById('btnAddCandidate').addEventListener('click', () => {
-      const role = ROLES[currentRoleKey];
+      const role = BRAZIL_ROLES[currentRoleKey];
       const name = document.getElementById('newCandName').value.trim();
       const party = document.getElementById('newCandParty').value.trim();
       const number = document.getElementById('newCandNumber').value.trim();
@@ -1227,8 +1264,8 @@
       const avatar = currentUploadedCandPhoto || photoUrl || `https://placehold.co/200x250/334155/ffffff?text=${encodeURIComponent(name.charAt(0))}`;
       const viceAvatar = currentUploadedVicePhoto || vicePhotoUrl || '';
 
-      // DB 저장
-      CANDIDATES_DB[currentRoleKey][number] = {
+      const candidatesMap = getCandidatesMapForRole(currentRoleKey);
+      candidatesMap[number] = {
         name,
         party,
         avatar,
@@ -1236,7 +1273,6 @@
         viceAvatar: role.hasVice ? viceAvatar : ''
       };
 
-      // 폼 초기화
       document.getElementById('newCandName').value = '';
       document.getElementById('newCandParty').value = '';
       document.getElementById('newCandNumber').value = '';
@@ -1253,11 +1289,11 @@
       showToast(`기호 ${number}번 [${name}] 후보가 등록되었습니다!`);
     });
 
-    // 후보 및 누적 투표 결과 통합 JSON 저장 (내보내기)
     document.getElementById('btnExportCandidates').addEventListener('click', () => {
       const exportPackage = {
         app: "UrnaEletronica-UE2026",
-        version: "2026.1",
+        mode: "brazil",
+        enabledRoles: enabledRoles,
         exportedAt: new Date().toISOString(),
         candidates: CANDIDATES_DB,
         results: ELECTION_RESULTS
@@ -1265,14 +1301,13 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPackage, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `urna_election_data_${new Date().toISOString().slice(0,10)}.json`);
+      downloadAnchor.setAttribute("download", `urna_eletronica_dados_${new Date().toISOString().slice(0,10)}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
       showToast('후보 데이터 및 누적 투표 결과가 함께 저장되었습니다.');
     });
 
-    // 후보 및 투표 결과 JSON 불러오기 (이전 단일 후보 JSON과도 100% 호환)
     document.getElementById('btnImportCandidatesTrigger').addEventListener('click', () => {
       document.getElementById('candidateFileInput').click();
     });
@@ -1288,8 +1323,11 @@
           if (parsed && typeof parsed === 'object') {
             let loadedResultsCount = 0;
 
+            if (parsed.enabledRoles && typeof parsed.enabledRoles === 'object') {
+              enabledRoles = { ...enabledRoles, ...parsed.enabledRoles };
+            }
+
             if (parsed.candidates) {
-              // 통합 패키지 포맷
               CANDIDATES_DB = parsed.candidates;
               if (parsed.results) {
                 ELECTION_RESULTS = parsed.results;
@@ -1298,13 +1336,15 @@
                 });
               }
             } else {
-              // 이전 단일 후보 DB 구조 호환
               CANDIDATES_DB = parsed;
             }
 
+            renderStageCheckboxes();
+            updateRoleDropdown();
+            syncRoleUi();
             renderCandidateList();
             renderScreen();
-            
+
             if (loadedResultsCount > 0) {
               showToast(`후보 목록 및 누적 ${loadedResultsCount}표의 투표 결과가 복원되었습니다.`);
             } else {
@@ -1321,85 +1361,65 @@
       e.target.value = '';
     });
 
-    // 모든 투표 초기화
     document.getElementById('btnResetAllVotes').addEventListener('click', () => {
-      Object.keys(ELECTION_RESULTS).forEach(k => {
-        ELECTION_RESULTS[k] = { votes: {}, branco: 0, nulo: 0, total: 0 };
-      });
+      initResults();
       resetVoteScreen();
       showToast('모든 투표 기록이 초기화되었습니다.');
     });
 
-    // 투표 결과 모달 열기
     document.getElementById('btnViewResults').addEventListener('click', () => {
       const content = document.getElementById('modalResultContent');
       let html = '';
+      const activeSequence = getActiveSequence();
 
-      Object.keys(ROLES).forEach(rKey => {
-        const role = ROLES[rKey];
-        const res = ELECTION_RESULTS[rKey];
-        const cands = CANDIDATES_DB[rKey] || {};
+      activeSequence.forEach(rKey => {
+        const role = BRAZIL_ROLES[rKey];
+        const res = ELECTION_RESULTS[rKey] || { votes: {}, branco: 0, nulo: 0, total: 0 };
+        const cands = getCandidatesMapForRole(rKey);
 
         html += `
-          <div class="border border-slate-200 rounded-xl p-3.5 bg-slate-50/70">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-2 mb-2">
-              <span class="font-black text-slate-800 text-base">${role.krName} <span class="text-xs font-normal text-slate-500">(${role.name})</span></span>
-              <span class="text-xs font-bold bg-slate-200 px-2 py-0.5 rounded text-slate-700">총 투표: ${res.total}표</span>
+          <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/80">
+            <div class="flex justify-between items-center border-b border-slate-200 pb-1.5 mb-2">
+              <span class="font-bold text-slate-800 text-sm">${role.name}</span>
+              <span class="text-[10px] font-mono font-bold bg-slate-200 px-2 py-0.5 rounded text-slate-700">총 투표: ${res.total}표</span>
             </div>
             
             <div class="space-y-1.5 text-xs">
         `;
 
         if (res.total === 0) {
-          html += `<div class="text-slate-400 py-1 text-center">아직 투표된 기록이 없습니다.</div>`;
+          html += `<div class="text-slate-400 py-1 text-center text-[11px]">아직 투표된 기록이 없습니다.</div>`;
         } else {
-          // 각 후보별 득표
           Object.keys(cands).forEach(num => {
             const cand = cands[num];
             const voteCount = res.votes[num] || 0;
             const pct = res.total > 0 ? ((voteCount / res.total) * 100).toFixed(1) : 0;
             html += `
               <div>
-        <label class="block text-sm font-semibold text-slate-700 mb-1.5">선거 유형 선택</label>
-        <div class="relative">
-          <select id="roleSelector" class="w-full appearance-none bg-white border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-8 transition">
-            <option value="dep_est">주하원의원 선거 (Deputado Estadual - 5자리)</option>
-            <option value="dep_fed">연방하원의원 선거 (Deputado Federal - 4자리)</option>
-            <option value="senador">상원의원 선거 (Senador - 3자리)</option>
-            <option value="governador">주지사 선거 (Governador - 2자리)</option>
-            <option value="presidente">대통령 선거 (Presidente - 2자리)</option>
-          </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-500">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-          </div>
-        </div>
-      </div>
-                <div class="w-full bg-slate-200 rounded-full h-1.5 mt-1 overflow-hidden">
+                <div class="flex justify-between text-slate-700 font-semibold text-[11px]">
+                  <span>[${num}] ${cand.name} (${cand.party})</span>
+                  <span class="font-mono">${voteCount}표 (${pct}%)</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-1.5 mt-0.5 overflow-hidden">
                   <div class="bg-blue-600 h-1.5 rounded-full" style="width: ${pct}%"></div>
                 </div>
               </div>
             `;
           });
 
-          // 백지표
           const brancoPct = ((res.branco / res.total) * 100).toFixed(1);
           html += `
-            <div class="pt-1 border-t border-slate-200 mt-2">
-              <div class="flex justify-between text-slate-600 font-medium">
-                <span>VOTO EM BRANCO (백지표)</span>
-                <span class="font-mono">${res.branco}표 (${brancoPct}%)</span>
-              </div>
+            <div class="pt-1 border-t border-slate-200 mt-1.5 flex justify-between text-slate-600 text-[11px]">
+              <span>VOTO EM BRANCO (백지표)</span>
+              <span class="font-mono">${res.branco}표 (${brancoPct}%)</span>
             </div>
           `;
 
-          // 무효표
           const nuloPct = ((res.nulo / res.total) * 100).toFixed(1);
           html += `
-            <div>
-              <div class="flex justify-between text-rose-600 font-medium">
-                <span>VOTO NULO (무효표)</span>
-                <span class="font-mono">${res.nulo}표 (${nuloPct}%)</span>
-              </div>
+            <div class="flex justify-between text-rose-600 text-[11px]">
+              <span>VOTO NULO (무효표)</span>
+              <span class="font-mono">${res.nulo}표 (${nuloPct}%)</span>
             </div>
           `;
         }
@@ -1414,16 +1434,15 @@
       document.getElementById('resultModal').classList.remove('hidden');
     });
 
-    // 모달 닫기
     const closeModal = () => document.getElementById('resultModal').classList.add('hidden');
     document.getElementById('btnCloseModal').addEventListener('click', closeModal);
     document.getElementById('btnCloseModalBtn').addEventListener('click', closeModal);
 
-    // 투표 결과 JSON 다운로드
     document.getElementById('btnExportResultJson').addEventListener('click', () => {
       const exportPackage = {
         app: "UrnaEletronica-UE2026",
-        version: "2026.1",
+        mode: "brazil",
+        enabledRoles: enabledRoles,
         exportedAt: new Date().toISOString(),
         candidates: CANDIDATES_DB,
         results: ELECTION_RESULTS
@@ -1435,10 +1454,9 @@
       document.body.appendChild(a);
       a.click();
       a.remove();
-      showToast('후보 정보 및 개표 결과 JSON 파일이 저장되었습니다.');
+      showToast('개표 결과 JSON 파일이 다운로드되었습니다.');
     });
 
-    // 하드웨어 버튼 클릭 이벤트 리스너 바인딩
     document.querySelectorAll('[data-key]').forEach(btn => {
       btn.addEventListener('click', () => {
         handleDigit(btn.getAttribute('data-key'));
@@ -1454,7 +1472,6 @@
       });
     });
 
-    /* 키보드 입력 시 화면 키패드 물리적 눌림 애니메이션 표시 */
     function animateButtonPress(selector, isAction = false) {
       const btn = document.querySelector(selector);
       if (!btn) return;
@@ -1465,12 +1482,9 @@
       }, 110);
     }
 
-    // 물리 키보드 바인딩 (컴퓨터 상단 숫자열 및 우측 넘버패드 완벽 지원)
     window.addEventListener('keydown', (e) => {
-      // 폼 입력(input, select, textarea) 중일 때는 우르나 키 조작 방지
       if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
-      // 1. 숫자키 (상단 숫자키 '0'~'9' 및 우측 넘버패드 Numpad 0~9 지원)
       if ((e.key >= '0' && e.key <= '9') || (e.code && e.code.startsWith('Numpad') && !isNaN(e.key))) {
         e.preventDefault();
         const digit = e.key;
@@ -1479,7 +1493,6 @@
         return;
       }
 
-      // 2. 확인 키: Enter 및 넘버패드 Enter
       if (e.key === 'Enter' || e.code === 'NumpadEnter') {
         e.preventDefault();
         animateButtonPress('[data-action="CONFIRMA"]', true);
@@ -1487,7 +1500,6 @@
         return;
       }
 
-      // 3. 정정 키: Backspace, Delete, Escape, 'C', 'c'
       if (e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
         e.preventDefault();
         animateButtonPress('[data-action="CORRIGE"]', true);
@@ -1495,7 +1507,6 @@
         return;
       }
 
-      // 4. 백지 투표 키: 'B', 'b', Space (스페이스바)
       if (e.key === 'b' || e.key === 'B' || e.code === 'Space') {
         e.preventDefault();
         animateButtonPress('[data-action="BRANCO"]', true);
@@ -1504,7 +1515,10 @@
       }
     });
 
-    // 초기 렌더링
+    // 초기 실행
+    renderStageCheckboxes();
+    updateRoleDropdown();
+    syncRoleUi();
     renderCandidateList();
     renderScreen();
   </script>
