@@ -612,6 +612,30 @@
     let currentUploadedCandPhoto = '';
     let currentUploadedVicePhoto = '';
     let firstSenatorVoteNumber = null; // 상원의원 1차 투표 번호 기록 (동일 후보 2차 투표 무효화 체크용)
+
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    // 키패드 타건음 (1420Hz 트라이앵글파 전자 비프음)
+    function playKeyTone() {
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1420, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.055);
+      } catch (e) {}
+    }
+
     // 단계별 확인음 (940Hz 사각파)
     function playStepConfirmTone() {
       initAudio();
